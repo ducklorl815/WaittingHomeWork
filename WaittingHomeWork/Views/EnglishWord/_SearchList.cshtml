@@ -1,0 +1,36 @@
+﻿@using WaittingHomeWork.ViewModel;
+@model EnglishWordViewModel_result
+
+<table class="footable table table-stripped toggle-arrow-tiny">
+    <thead>
+        <tr style="white-space:nowrap;background-color:	#F0F0F0;">
+            <th class="col-1">姓名</th>
+            <th class="col-1">手機</th>
+            <th class="col-1">部門</th>
+            <th class="col-1">職稱</th>
+            <th class="col-1">職務</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.WordList)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ID)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CWord)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Word)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Correct)
+                </td>
+                <td class="text-left">
+                    @Html.DisplayFor(modelItem => item.Review)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

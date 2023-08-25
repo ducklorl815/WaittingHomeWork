@@ -1,0 +1,17 @@
+﻿<head>
+    <partial name="_Header"></partial>
+</head>
+<body>
+    <partial name="_Navbar"></partial>
+    <div class="container-fluid page-body-wrapper">
+        <partial name="_Sidebar"></partial>
+        <div class="main-panel">
+            <div class="content-wrapper">
+                @RenderBody()
+            </div>
+            <partial name="_Footer"></partial>
+        </div>
+    </div>
+    <partial name="_Scripts"></partial>
+</body>
+

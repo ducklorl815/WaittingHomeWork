@@ -1,15 +1,21 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using WaittingHomeWork.ViewModel;
 
 namespace WaittingHomeWork.Controllers
 {
     public partial class EnglishWordController : Controller
     {
-        public async Task<IActionResult> SearchList(EnglishWordViewModel_param param)
+        public async Task<IActionResult> SearchList(Guid KidID)
         {
-            var result = await _englishWordService.GetListAsync(param);
+            var result = await _englishWordService.GetListAsync(KidID);
 
-            return View("Index", result);
+            if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+            {
+                return PartialView("_SearchList", result);
+            }
+            else
+            {
+                return View("Index", result);
+            }
         }
     }
 }

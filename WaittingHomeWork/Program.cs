@@ -12,11 +12,13 @@ builder.Services.AddSingleton<ITempDataDictionaryFactory, TempDataDictionaryFact
 builder.Services.AddSingleton<ITempDataProvider, CookieTempDataProvider>();
 
 builder.Services.AddSingleton<EnglishWordService>();
+builder.Services.AddSingleton<HomeService>();
 
 #endregion
 
 #region Respository
 builder.Services.AddSingleton<EnglishWordRepo>();
+builder.Services.AddSingleton<HomeRepo>();
 
 #endregion
 var app = builder.Build();

@@ -1,36 +1,251 @@
 ﻿@using WaittingHomeWork.ViewModel;
 @model EnglishWordViewModel_result
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f0f0f0;
+        margin: 0;
+        padding: 0;
+    }
 
-<table class="footable table table-stripped toggle-arrow-tiny">
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    th, td {
+        padding: 8px;
+        text-align: left;
+        border-bottom: 1px solid #ddd; /* 微弱底線 */
+    }
+
+    th {
+        background-color: #f8f8f8;
+    }
+
+    input[type="text"] {
+        width: 100%;
+        padding: 5px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        background-color: transparent;
+    }
+
+    input[type="checkbox"] {
+        margin: 0;
+        padding: 0;
+        padding: 5px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        transform: scale(1.2);
+        background-color: lightgray; /* 設定背景顏色 */
+    }
+
+        input[type="checkbox"]:checked {
+            background-color: darkgray !important; /* 選中時的背景顏色 */
+        }
+
+    button {
+        padding: 5px 10px;
+        background-color: #17a2b8;
+        border: none;
+        border-radius: 5px;
+        color: white;
+        cursor: pointer;
+    }
+
+        button:hover {
+            background-color: #138496;
+        }
+</style>
+<input type="hidden" data-kidid="@Model.KidID" />
+<table>
     <thead>
-        <tr style="white-space:nowrap;background-color:	#F0F0F0;">
-            <th class="col-1">姓名</th>
-            <th class="col-1">手機</th>
-            <th class="col-1">部門</th>
-            <th class="col-1">職稱</th>
-            <th class="col-1">職務</th>
+        <tr class="text-center">
+            <th class="col-1"><input type="text" class="text-left col-12 form-control" /></th>
+            <th class="col-1"><input type="text" class="text-left col-12 form-control" /></th>
+            <th class="col-9" colspan="3"><input type="text" class="text-left col-12 form-control" /></th>
+            <th class="text-center col-1">
+                <button onclick="InsertWord(this)">新增</button>
+            </th>
+        </tr>
+
+        <tr>
+            <th>中文名稱</th>
+            <th>英文名稱</th>
+            <th>解釋</th>
+            <th class="text-center">答對</th>
+            <th class="text-center">複習次數</th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model.WordList)
+        @foreach (var item in Model.WordTableList)
         {
             <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.ID)
+                <td class="col-1">
+                    <input type="text" value="@item.CName" />
                 </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.CWord)
+                <td class="col-1">
+                    <input type="text" value="@item.Word" />
                 </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Word)
+                <td class="col-7">
+                    <input type="text" value="@item.Explain" />
                 </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Correct)
+                <td class="text-center col-1">
+                    <input class="text-center" type="checkbox" @(item.Correct.HasValue && item.Correct.Value ? "checked" : "") />
                 </td>
-                <td class="text-left">
-                    @Html.DisplayFor(modelItem => item.Review)
+
+                <td class="text-center col-1">
+                    <input class="text-center" type="text" value="@item.Review" />
+                </td>
+                <td class="text-center col-1">
+                    <button onclick="UpdateWord(this, '@item.ID','@item.WordIndexID')">修改</button>
                 </td>
             </tr>
         }
     </tbody>
 </table>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    var kidID = document.querySelector('input[data-kidid]').getAttribute('data-kidid');
+
+    function ajaxReload(checkedBtn) {
+        $.ajax({
+            url: "/EnglishWord/SearchList/",
+            type: 'GET',
+            success: function (result) {
+                $('#partial').html(result);
+            },
+            error: function (xhr, status, error) {
+                console.error('failed: ' + error);
+            }
+        });
+    }
+
+    function chkInputData(checkedBtn) {
+        var trElement = checkedBtn.closest("tr");
+        var inputs = trElement.querySelectorAll("input");
+        var allInputsFilled = true;
+
+        inputs.forEach(function (input) {
+            if (input.value.trim() === "") {
+                allInputsFilled = false;
+            }
+        });
+        if (!allInputsFilled) {
+            alert("請先填好內容");
+            return false;
+        }
+        return true;
+    }
+    function InsertWord(checkedBtn) {
+        var trElement = checkedBtn.closest("tr");
+        var inputs = trElement.querySelectorAll("input");
+
+        var cname = inputs[0].value.trim();
+        var word = inputs[1].value.trim();
+        var explain = inputs[2].value.trim();
+        if (chkInputData(checkedBtn)) {
+            $.ajax({
+                url: "/EnglishWord/Insert/",
+                type: "GET",
+                data: {
+                    CName: cname,
+                    Word: word,
+                    Explain: explain,
+                },
+                success: function (response) {
+                    if (response) {
+                        Swal.fire({
+                            position: 'top-mid',
+                            icon: 'success',
+                            title: '新增成功',
+                            showConfirmButton: false,
+                            timer: 1500
+                        }).then((response) => {
+                            cname = '';
+                            word = '';
+                            explain = '';
+                            ajaxReload(checkedBtn)
+                        })
+                    }
+                    else {
+                        Swal.fire({
+                            position: 'top-mid',
+                            icon: 'warning',
+                            title: '新增失敗',
+                            showConfirmButton: false,
+                            timer: 1500
+                        })
+                    }
+                }
+            });
+        }
+
+    }
+
+    function UpdateWord(checkedBtn, MainID, WordIndexID) {
+        var trElement = checkedBtn.closest("tr");
+        var inputs = trElement.querySelectorAll("input");
+
+        var cname = inputs[0].value.trim();
+        var word = inputs[1].value.trim();
+        var explain = inputs[2].value.trim();
+        var correct = inputs[3].checked;
+        var review = inputs[4].value.trim();
+
+        debugger;
+
+        if (chkInputData(checkedBtn)) {
+            $.ajax({
+                url: "/EnglishWord/Update/",
+                type: "GET",
+                data: {
+                    ID: MainID,
+                    CName: cname,
+                    Word: word,
+                    Explain: explain,
+                    Correct: correct,
+                    Review: review,
+                    WordIndexID: WordIndexID,
+                    KidID: kidID,
+                },
+                success: function (response) {
+                    if (response) {
+                        Swal.fire({
+                            position: 'top-mid',
+                            icon: 'success',
+                            title: '修改成功',
+                            showConfirmButton: false,
+                            timer: 1500
+                        }).then((response) => {
+                            ajaxReload(checkedBtn)
+                        })
+                    }
+                    else {
+                        Swal.fire({
+                            position: 'top-mid',
+                            icon: 'warning',
+                            title: '修改失敗',
+                            showConfirmButton: false,
+                            timer: 1500
+                        })
+                    }
+                }
+            });
+        }
+
+    }
+
+</script>

@@ -1,19 +1,26 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using WaittingHomeWork.Service;
 
 namespace WaittingHomeWork.Controllers
 {
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-
-        public HomeController(ILogger<HomeController> logger)
+        private readonly HomeService _homeService;
+        public HomeController(
+            ILogger<HomeController> logger,
+             HomeService homeService
+            )
         {
             _logger = logger;
+            _homeService = homeService;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var KidList = await _homeService.GetKidListAsync();
+
+            return View(KidList);
         }
 
     }

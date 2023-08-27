@@ -4,31 +4,23 @@
 <table class="footable table table-stripped toggle-arrow-tiny">
     <thead>
         <tr style="white-space:nowrap;background-color:	#F0F0F0;">
-            <th class="col-1">姓名</th>
-            <th class="col-1">手機</th>
-            <th class="col-1">部門</th>
-            <th class="col-1">職稱</th>
-            <th class="col-1">職務</th>
+            <th class="col-1">中文名稱</th>
+            <th class="col-1">英文名稱</th>
+            <th class="col-1">解釋</th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model.WordList)
+        @foreach (var item in Model.WordTableList)
         {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.ID)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.CWord)
+                    @Html.DisplayFor(modelItem => item.CName)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Word)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Correct)
-                </td>
-                <td class="text-left">
-                    @Html.DisplayFor(modelItem => item.Review)
+                    @Html.DisplayFor(modelItem => item.Explain)
                 </td>
             </tr>
         }

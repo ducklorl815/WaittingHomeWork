@@ -1,26 +1,25 @@
 ﻿using Dapper;
 using System.Data.SqlClient;
-using WaittingHomeWork.Models;
 
 namespace WaittingHomeWork.Respository
 {
     public class HomeRepo
     {
-        public async Task<List<KidMain>> GetKidListAsync()
+        public async Task<List<(Guid, string)>> GetKidListAsync()
         {
             var sql = $@"
-                        SELECT *
+                        SELECT [ID],[Cname]
                           FROM [KidsWorld].[dbo].[KidMain]
                           Where 1=1
                           AND [Enabled] = 1
                           AND [Deleted] = 0
                         ";
 
-            using var conn = new SqlConnection("Data Source=192.168.0.143;Initial Catalog=KidsWorld;User ID=ducklorl815;Password=!QAZ@WSX;Integrated Security=false;Pooling=TRUE;Application Name=WaittingHomeWork");
+            using var conn = new SqlConnection("Data Source=192.168.100.2;Initial Catalog=KidsWorld;User ID=ducklorl815;Password=!QAZ@WSX;Integrated Security=false;Pooling=TRUE;Application Name=WaittingHomeWork");
 
             try
             {
-                var result = await conn.QueryAsync<KidMain>(sql);
+                var result = await conn.QueryAsync<(Guid, string)>(sql);
                 return result.ToList();
             }
             catch (Exception)

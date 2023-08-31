@@ -1,4 +1,5 @@
-﻿using WaittingHomeWork.Models;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using WaittingHomeWork.Models;
 using WaittingHomeWork.Respository;
 using WaittingHomeWork.ViewModel;
 
@@ -14,15 +15,16 @@ namespace WaittingHomeWork.Service
         {
             _homeRepo = homeRepo;
         }
-        public async Task<KidMainViewModel_result> GetKidListAsync()
+        public async Task<EnglishWordViewModel_result> GetKidListAsync()
         {
-            var result = new KidMainViewModel_result()
+            var result = new EnglishWordViewModel_result()
             {
-                KidList = new List<KidMain>()
+                WordTableList = new List<EnglishWordTableModel>(),
+                KidList = new List<SelectListItem>(),
             };
 
             var KidList = await _homeRepo.GetKidListAsync();
-            result.KidList = KidList;
+            result.KidList = KidList.Select(x => new SelectListItem { Text = x.Item2, Value = x.Item1.ToString() }).ToList();
             return result;
         }
     }

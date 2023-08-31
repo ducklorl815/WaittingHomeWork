@@ -28,7 +28,7 @@ namespace WaittingHomeWork.Respository
                         AND ew.Deleted = 0
                         ";
 
-            using var conn = new SqlConnection("Data Source=192.168.0.143;Initial Catalog=KidsWorld;User ID=ducklorl815;Password=!QAZ@WSX;Integrated Security=false;Pooling=TRUE;Application Name=WaittingHomeWork");
+            using var conn = new SqlConnection("Data Source=192.168.100.2;Initial Catalog=KidsWorld;User ID=ducklorl815;Password=!QAZ@WSX;Integrated Security=false;Pooling=TRUE;Application Name=WaittingHomeWork");
 
             try
             {
@@ -68,7 +68,7 @@ namespace WaittingHomeWork.Respository
                                    ,0)
                         ";
 
-            using var conn = new SqlConnection("Data Source=192.168.0.143;Initial Catalog=KidsWorld;User ID=ducklorl815;Password=!QAZ@WSX;Integrated Security=false;Pooling=TRUE;Application Name=WaittingHomeWork");
+            using var conn = new SqlConnection("Data Source=192.168.100.2;Initial Catalog=KidsWorld;User ID=ducklorl815;Password=!QAZ@WSX;Integrated Security=false;Pooling=TRUE;Application Name=WaittingHomeWork");
 
             try
             {
@@ -98,7 +98,7 @@ namespace WaittingHomeWork.Respository
                          WHERE ID = @ID
                         ";
 
-            using var conn = new SqlConnection("Data Source=192.168.0.143;Initial Catalog=KidsWorld;User ID=ducklorl815;Password=!QAZ@WSX;Integrated Security=false;Pooling=TRUE;Application Name=WaittingHomeWork");
+            using var conn = new SqlConnection("Data Source=192.168.100.2;Initial Catalog=KidsWorld;User ID=ducklorl815;Password=!QAZ@WSX;Integrated Security=false;Pooling=TRUE;Application Name=WaittingHomeWork");
 
             try
             {
@@ -126,7 +126,7 @@ namespace WaittingHomeWork.Respository
                          WHERE [ID] = @ID
                         ";
 
-            using var conn = new SqlConnection("Data Source=192.168.0.143;Initial Catalog=KidsWorld;User ID=ducklorl815;Password=!QAZ@WSX;Integrated Security=false;Pooling=TRUE;Application Name=WaittingHomeWork");
+            using var conn = new SqlConnection("Data Source=192.168.100.2;Initial Catalog=KidsWorld;User ID=ducklorl815;Password=!QAZ@WSX;Integrated Security=false;Pooling=TRUE;Application Name=WaittingHomeWork");
 
             try
             {

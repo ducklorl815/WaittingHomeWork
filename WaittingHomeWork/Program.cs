@@ -1,11 +1,20 @@
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using WaittingHomeWork.Models;
 using WaittingHomeWork.Respository;
 using WaittingHomeWork.Service;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+#region DBList
+
+builder.Services.Configure<DBList>(builder.Configuration.GetSection("ConnectionStrings"));
+
+#endregion
+
 #region Service
 
 builder.Services.AddSingleton<ITempDataDictionaryFactory, TempDataDictionaryFactory>();
@@ -21,6 +30,8 @@ builder.Services.AddSingleton<EnglishWordRepo>();
 builder.Services.AddSingleton<HomeRepo>();
 
 #endregion
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

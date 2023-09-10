@@ -1,10 +1,21 @@
 ﻿using Dapper;
+using Microsoft.Extensions.Options;
 using System.Data.SqlClient;
+using WaittingHomeWork.Models;
 
 namespace WaittingHomeWork.Respository
 {
     public class HomeRepo
     {
+        private readonly DBList _dBList;
+
+        public HomeRepo
+            (
+            IOptions<DBList> dbList
+            )
+        {
+            _dBList = dbList.Value;
+        }
         public async Task<List<(Guid, string)>> GetKidListAsync()
         {
             var sql = $@"
@@ -15,7 +26,7 @@ namespace WaittingHomeWork.Respository
                           AND [Deleted] = 0
                         ";
 
-            using var conn = new SqlConnection("Data Source=192.168.100.2;Initial Catalog=KidsWorld;User ID=ducklorl815;Password=!QAZ@WSX;Integrated Security=false;Pooling=TRUE;Application Name=WaittingHomeWork");
+            using var conn = new SqlConnection(_dBList.KidsWorld);
 
             try
             {

@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using Microsoft.Extensions.Options;
 using System.Data.SqlClient;
 using WaittingHomeWork.Models;
 using WaittingHomeWork.ViewModel;
@@ -7,28 +8,32 @@ namespace WaittingHomeWork.Respository
 {
     public partial class EnglishWordRepo
     {
+        private readonly DBList _dBList;
         public EnglishWordRepo
             (
-
+                IOptions<DBList> dbList
             )
         {
-
+            _dBList = dbList.Value;
         }
         public async Task<List<EnglishWordTableModel>> GetListAsync(Guid KidID)
         {
             var sqlparam = new DynamicParameters();
-            sqlparam.Add("KidID", KidID);
-            var sql = $@"
-                        SELECT ew.ID,ew.CName,ew.Word,ew.Explain,wi.ID as WordIndexID,wi.Correct,wi.Review,km.ID as KidID
-                        FROM [KidsWorld].[dbo].[EnglishWord] ew
-						LEFT JOIN [KidsWorld].dbo.WordIndex wi ON wi.WordID = ew.ID
-						LEFT JOIN [KidsWorld].dbo.KidMain km ON km.ID = wi.KidMainID
-                        Where km.ID = 'B41597A1-3C2A-45A6-ABC9-087F17A641F0'
-                        AND ew.Enabled = 1
-                        AND ew.Deleted = 0
-                        ";
+            var sql = string.Empty;
 
-            using var conn = new SqlConnection("Data Source=192.168.100.2;Initial Catalog=KidsWorld;User ID=ducklorl815;Password=!QAZ@WSX;Integrated Security=false;Pooling=TRUE;Application Name=WaittingHomeWork");
+            if (KidID != Guid.Empty)
+            {
+                sqlparam.Add("KidID", KidID);
+
+                sql = KidIDIsNotNullSQL();
+            }
+            else
+            {
+                sql = KidIDIsNullSQL();
+            }
+
+
+            using var conn = new SqlConnection(_dBList.KidsWorld);
 
             try
             {
@@ -39,6 +44,39 @@ namespace WaittingHomeWork.Respository
             {
                 return null;
             }
+        }
+
+        private string KidIDIsNullSQL()
+        {
+
+            var sql = @$"
+                        SELECT [ID]
+                              ,[Seq]
+                              ,[CName]
+                              ,[Word]
+                              ,[Explain]
+                              ,[CreateDate]
+                              ,[ModifyDate]
+                              ,[Enabled]
+                              ,[Deleted]
+                          FROM [KidsWorld].[dbo].[EnglishWord]
+                        ";
+            return sql;
+        }
+        private string KidIDIsNotNullSQL()
+        {
+
+            var sql = @$"
+                        SELECT ew.ID,ew.CName,ew.Word,ew.Explain,wi.ID as WordIndexID,wi.Correct,wi.Review,km.ID as KidID
+                        FROM [KidsWorld].[dbo].[EnglishWord] ew
+						LEFT JOIN [KidsWorld].dbo.WordIndex wi ON wi.WordID = ew.ID
+						LEFT JOIN [KidsWorld].dbo.KidMain km ON km.ID = wi.KidMainID
+                        Where km.ID =@KidID
+                        AND ew.Enabled = 1
+                        AND ew.Deleted = 0
+                        Order by wi.Correct ,wi.Review
+                        ";
+            return sql;
         }
         public async Task<bool> GetInsertAsync(string CName, string Word, string Explain)
         {
@@ -68,7 +106,7 @@ namespace WaittingHomeWork.Respository
                                    ,0)
                         ";
 
-            using var conn = new SqlConnection("Data Source=192.168.100.2;Initial Catalog=KidsWorld;User ID=ducklorl815;Password=!QAZ@WSX;Integrated Security=false;Pooling=TRUE;Application Name=WaittingHomeWork");
+            using var conn = new SqlConnection(_dBList.KidsWorld);
 
             try
             {
@@ -98,7 +136,7 @@ namespace WaittingHomeWork.Respository
                          WHERE ID = @ID
                         ";
 
-            using var conn = new SqlConnection("Data Source=192.168.100.2;Initial Catalog=KidsWorld;User ID=ducklorl815;Password=!QAZ@WSX;Integrated Security=false;Pooling=TRUE;Application Name=WaittingHomeWork");
+            using var conn = new SqlConnection(_dBList.KidsWorld);
 
             try
             {
@@ -126,7 +164,7 @@ namespace WaittingHomeWork.Respository
                          WHERE [ID] = @ID
                         ";
 
-            using var conn = new SqlConnection("Data Source=192.168.100.2;Initial Catalog=KidsWorld;User ID=ducklorl815;Password=!QAZ@WSX;Integrated Security=false;Pooling=TRUE;Application Name=WaittingHomeWork");
+            using var conn = new SqlConnection(_dBList.KidsWorld);
 
             try
             {

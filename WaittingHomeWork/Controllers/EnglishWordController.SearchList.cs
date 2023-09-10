@@ -10,7 +10,14 @@ namespace WaittingHomeWork.Controllers
 
             if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
-                return PartialView("_SearchList", result);
+                if (KidID != Guid.Empty)
+                {
+                    return PartialView("_IDNotNullSearchList", result);
+                }
+                else
+                {
+                    return PartialView("_IDNullSearchList", result);
+                }
             }
             else
             {

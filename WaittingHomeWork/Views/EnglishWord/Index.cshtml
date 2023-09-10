@@ -1,61 +1,12 @@
-﻿<div class="wrapper wrapper-content animated fadeIn">
+﻿@using WaittingHomeWork.ViewModel;
+@model EnglishWordViewModel_result
+<div >
     <div class="row">
         <div class="col-lg-12">
-            <div class="ibox ">
-                <div class="ibox-content" style="padding:0px;">
-                    <div class="panel-body">
-                        <div class="panel-group" id="accordion">
-                            <div class="panel panel-default">
-                                <div class="panel-heading">
-                                    <h5 class="panel-title">
-                                        <a data-toggle="collapse" data-parent="#accordion" href="#collapseThree" class="collapsed">搜尋條件 <i class="fa fa-hand-o-left"></i></a>
-                                    </h5>
-                                </div>
-                                <div id="collapseThree" class="panel-collapse collapse in (Model.List!=null && Model.List.Any()?" ":" show")">
-                                    <div class="panel-body">
-                                        <form method="get">
-                                            <div class="row">
-                                                <div class="col-xl-4 col-lg-6 row">
-                                                    <label for="Number" class="col-sm-4 col-form-label font-weight-bold text-sm-right">科威帳號</label>
-                                                    <div class="col-sm-8 input-group">
-                                                    </div>
-                                                </div>
-                                                <div class="col-xl-4 col-lg-6 row">
-                                                    <label for="Number" class="col-sm-4 col-form-label font-weight-bold text-sm-right">鼎新員編</label>
-                                                    <div class="col-sm-8 input-group">
-                                                    </div>
-                                                </div>
-                                                <div class="col-xl-4 col-lg-6 row">
-                                                    <label for="Number" class="col-sm-4 col-form-label font-weight-bold text-sm-right">部門</label>
-                                                    <div class="col-sm-8 input-group">
-                                                    </div>
-                                                </div>
-                                                <div class="col-xl-4 col-lg-6 row">
-                                                    <label for="Number" class="col-sm-4 col-form-label font-weight-bold text-sm-right">姓名</label>
-                                                    <div class="col-sm-8 input-group">
-                                                    </div>
-                                                </div>
-
-                                                <div class="col-xl-4 col-lg-6 row">
-                                                    <label class="col-sm-4 col-form-label font-weight-bold text-sm-right">報到日期</label>
-                                                    <div class="col-sm-8 input-group">
-                                                    </div>
-                                                </div>
-
-
-                                            </div>
-                                            <div class="row text-right" style="margin-top:10px;">
-                                                <div class="col">
-                                                    <button id="button-addon1" class="btn btn-success btn-sm" type="submit"><i style="width:12px;" class="fa fa-search"></i>搜尋</button>
-                                                    <button class="btn btn-default btn-sm SearchClearBtn" type="button"><i style="width:12px;" class="fa fa-times"></i>清除</button>
-                                                    <button class="btn btn-default btn-sm SearchShrinkBtn" type="button"><i style="width:12px;" class="fa fa-angle-double-up"></i>縮合</button>
-                                                </div>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-
+            <div>
+                <div style="padding:0px;">
+                    <div>
+                        <div>
                         </div>
                     </div>
                 </div>
@@ -64,11 +15,46 @@
     </div>
     <div class="row">
         <div class="col-lg-12">
-            <div class="ibox">
-                <div id="partial" class="ibox-content ibox-list-content">
-                    <partial name="_SearchList" model="Model"><partial />
+            <div >
+                <div id="partial" class="">
+                    @{
+                        if (Model.KidID != Guid.Empty)
+                        {
+                          <partial name="_IDNotNullSearchList" model="Model"></partial>
+                        }
+                        else
+                        {
+                          <partial name="_IDNullSearchList" model="Model"></partial>
+                        }
+                    }
                 </div>
+
             </div>
         </div>
     </div>
 </div>
+
+<script>
+    document.getElementById("KidList").oninput = function () {
+        var KidValue = this.value;
+        ajaxReload(KidValue);
+    };
+
+    function ajaxReload(KidValue) {
+        var kidID = KidValue;
+        $.ajax({
+            url: "/EnglishWord/SearchList/",
+            type: "GET",
+            data: {
+                KidID: kidID,
+            },
+            success: function (result) {
+                $('#partial').html(result);
+            },
+            error: function (xhr, status, error) {
+                console.error('failed: ' + error);
+            }
+        });
+    };
+
+</script>

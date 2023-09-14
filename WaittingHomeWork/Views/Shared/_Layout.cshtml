@@ -3,10 +3,13 @@
 
 <head>
     <partial name="_Header"></partial>
+    <link href="~/css/bootstrap.css" rel="stylesheet" />
+    <link href="~/css/style.css" rel="stylesheet" />
+    @RenderSection("Styles", required: false)
 </head>
 <body>
     <partial name="_Navbar"></partial>
-    <div class="2   -fluid page-body-wrapper">
+    <div class="2-fluid page-body-wrapper">
         <partial name="_Sidebar"></partial>
         <div class="main-panel">
             <div class="content-wrapper">
@@ -16,5 +19,6 @@
         </div>
     </div>
     <partial name="_Scripts"></partial>
+    @RenderSection("Scripts", required: false)
 </body>
 
